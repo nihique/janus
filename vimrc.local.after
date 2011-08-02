@@ -1,0 +1,277 @@
+"-----------------------------------------------------------------------------
+" Win compatibility
+"-----------------------------------------------------------------------------
+
+" Windows style mouse selection
+" behave mswin
+
+" Allow Windows copy paste shortcuts (ctrl+c, ctrl+v)
+" ctrl+q behaves as ctrl+v before (block selection)
+source $VIMRUNTIME/mswin.vim
+
+
+
+"-----------------------------------------------------------------------------
+" Text, tab and indent related
+"-----------------------------------------------------------------------------
+
+" Tabs are 4 spaces and always turn them to spaces
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+
+
+
+"-----------------------------------------------------------------------------
+" Colors, fonts, encoding and file formats
+"-----------------------------------------------------------------------------
+
+" Setting specific for molokai theme
+let g:molokai_original=0
+
+if has("gui_running")
+
+    color nhq-molokai
+
+    if has("win32") || has("win64")
+        set guifont=Envy\ Code\ R:h10
+        "set guifont=Monaco:h10
+        set linespace=0
+    elseif has("mac")
+        colorscheme nhq-molokai-mac
+        set guifont=Monaco:h13
+        set transparency=20
+    else
+        set guifont=Envy\ Code\ R\ 11
+    endif
+
+    if !exists("g:vimrcloaded")
+        winpos 714 0
+        if ! &diff
+            winsize 150 59
+        else
+            winsize 227 90
+        endif
+        let g:vimrcloaded = 1
+    endif
+
+endif
+
+set fileformats=unix,dos,mac
+
+
+
+"-----------------------------------------------------------------------------
+" Remapping
+"-----------------------------------------------------------------------------
+
+" Fast saving
+nmap <leader>w :w!<CR>
+
+" Fast editing of the .vimrc files
+nmap <leader>ev :e $MYVIMRC<CR>
+nmap <leader>sv :so $MYVIMRC<CR>
+nmap <leader>evl :e $MYVIMRC.local<CR>
+nmap <leader>svl :so $MYVIMRC.local<CR>
+nmap <leader>evb :e $MYVIMRC.local.before<CR>
+nmap <leader>svb :so $MYVIMRC.local.before<CR>
+
+" Switch to next buffer
+noremap <silent> <leader>bb :b#<CR>
+
+" Close current buffer but leave window open
+nnoremap <silent> <Leader>bd :Bclose<CR>
+
+" Close current buffer but leave window open, works also for unsaved files
+nnoremap <silent> <Leader>bD :Bclose!<CR>
+
+" Reload default theme
+nnoremap <silent> <Leader>color :color nhq-molokai<CR>
+
+
+
+"-----------------------------------------------------------------------------
+" Better windows handlind
+"-----------------------------------------------------------------------------
+
+noremap <silent> 'h :wincmd h<CR>
+noremap <silent> 'j :wincmd j<CR>
+noremap <silent> 'k :wincmd k<CR>
+noremap <silent> 'l :wincmd l<CR>
+noremap <silent> 'n :new<CR>
+noremap <silent> 's :split<CR>
+noremap <silent> 'v :vsplit<CR>
+noremap <silent> 'b :wincmd p<CR>
+noremap <silent> 'r :vertical resize 87<CR>
+noremap <silent> <C-F7> :resize -4<CR>
+noremap <silent> <C-F8> :resize +4<CR>
+noremap <silent> <C-F9>  :vertical resize -4<CR>
+noremap <silent> <C-F10> :vertical resize +4<CR>
+noremap <silent> 'cj :wincmd j<CR>:close<CR>
+noremap <silent> 'ck :wincmd k<CR>:close<CR>
+noremap <silent> 'ch :wincmd h<CR>:close<CR>
+noremap <silent> 'cl :wincmd l<CR>:close<CR>
+noremap <silent> 'cc :close<CR>
+noremap <silent> 'cw :cclose<CR>
+noremap <silent> 'ml <C-W>L
+noremap <silent> 'mk <C-W>K
+noremap <silent> 'mh <C-W>H
+noremap <silent> 'mj <C-W>J
+noremap <silent> 'mt <C-W>T
+"noremap <silent> <C-7> <C-W>+
+"noremap <silent> <C-8> <C-W>-
+"noremap <silent> <C-9> <C-W>>
+"noremap <silent> <C-0> <C-W><
+
+
+
+"-----------------------------------------------------------------------------
+" NERD Tree Plugin Settings
+"-----------------------------------------------------------------------------
+
+" Toggle the NERD Tree on an off with F7
+map <Leader>n :NERDTreeToggle<CR>
+
+" Show the bookmarks table on startup
+let NERDTreeShowBookmarks=1
+
+" Allow doubleclick mode to open nodes
+let NERDTreeMouseMode=1
+
+" Don't display these kinds of files
+let NERDTreeIgnore=[ '\.ncb$', '\.suo$', '\.vcproj\.RIMNET', '\.obj$',
+            \ '\.ilk$', '^BuildLog.htm$', '\.pdb$', '\.idb$',
+            \ '\.embed\.manifest$', '\.embed\.manifest.res$',
+            \ '\.intermediate\.manifest$', '^mt.dep$', 
+            \ 'NTUSER.DAT.*',
+            \ '\.pyc$', '\.rbc$', '\~$']
+
+
+
+"-----------------------------------------------------------------------------
+" Deleting buffer while keeping widnow layout
+"-----------------------------------------------------------------------------
+
+" Delete buffer while keeping window layout (don't close buffer's windows).
+" Version 2008-11-18 from http://vim.wikia.com/wiki/VimTip165
+if v:version < 700 || exists('loaded_bclose') || &cp
+    finish
+endif
+
+let loaded_bclose = 1
+
+if !exists('bclose_multiple')
+    let bclose_multiple = 1
+endif
+
+" Display an error message.
+function! s:Warn(msg)
+    echohl ErrorMsg
+    echomsg a:msg
+    echohl NONE
+endfunction
+
+" Command ':Bclose' executes ':bd' to delete buffer in current window.
+" The window will show the alternate buffer (Ctrl-^) if it exists,
+" or the previous buffer (:bp), or a blank buffer if no previous.
+" Command ':Bclose!' is the same, but executes ':bd!' (discard changes).
+" An optional argument can specify which buffer to close (name or number).
+function! s:Bclose(bang, buffer)
+    if empty(a:buffer)
+        let btarget = bufnr('%')
+    elseif a:buffer =~ '^\d\+$'
+        let btarget = bufnr(str2nr(a:buffer))
+    else
+        let btarget = bufnr(a:buffer)
+    endif
+
+    if btarget < 0
+        call s:Warn('No matching buffer for '.a:buffer)
+        return
+    endif
+
+    if empty(a:bang) && getbufvar(btarget, '&modified')
+        call s:Warn('No write since last change for buffer '.btarget.' (use :Bclose!)')
+        return
+    endif
+
+    " Numbers of windows that view target buffer which we will delete.
+    let wnums = filter(range(1, winnr('$')), 'winbufnr(v:val) == btarget')
+
+    if !g:bclose_multiple && len(wnums) > 1
+        call s:Warn('Buffer is in multiple windows (use ":let bclose_multiple=1")')
+        return
+    endif
+
+    let wcurrent = winnr()
+
+    for w in wnums
+        execute w.'wincmd w'
+        let prevbuf = bufnr('#')
+
+        if prevbuf > 0 && buflisted(prevbuf) && prevbuf != w
+            buffer #
+        else
+            bprevious
+        endif
+
+        if btarget == bufnr('%')
+            " Numbers of listed buffers which are not the target to be deleted.
+            let blisted = filter(range(1, bufnr('$')), 'buflisted(v:val) && v:val != btarget')
+            " Listed, not target, and not displayed.
+            let bhidden = filter(copy(blisted), 'bufwinnr(v:val) < 0')
+            " Take the first buffer, if any (could be more intelligent).
+            let bjump = (bhidden + blisted + [-1])[0]
+
+            if bjump > 0
+                execute 'buffer '.bjump
+            else
+                execute 'enew'.a:bang
+            endif
+        endif
+    endfor
+
+    execute 'bdelete'.a:bang.' '.btarget
+    execute wcurrent.'wincmd w'
+endfunction
+
+command! -bang -complete=buffer -nargs=? Bclose call <SID>Bclose('<bang>', '<args>')
+
+
+
+"-----------------------------------------------------------------------------
+" Syntax highliting
+"-----------------------------------------------------------------------------
+
+" asp.net
+autocmd BufRead,BufNewFile *.master set filetype=aspvbs
+
+
+
+"-----------------------------------------------------------------------------
+" Startup initialization
+"-----------------------------------------------------------------------------
+
+function! StartUp()
+    " Regenerate helptags for all plugins
+    if has("win32") || has("win64")
+        helptags $HOME/vimfiles/doc
+    else
+        helptags $HOME/.vim/doc
+    endif
+
+    " Go to home directory
+    if has("win32") || has("win64")
+        cd $HOME/Documents/code
+    else
+        cd ~/code
+    endif
+
+    " Open NERDTree window on startup without file
+    "if 0 == argc()
+    "    NERDTree
+    "end
+endfunction
+
+autocmd VimEnter * call StartUp()
+

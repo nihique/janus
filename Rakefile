@@ -132,10 +132,13 @@ vim_plugin_task "git",              "git://github.com/tpope/vim-git.git"
 vim_plugin_task "haml",             "git://github.com/tpope/vim-haml.git"
 vim_plugin_task "indent_object",    "git://github.com/michaeljsmith/vim-indent-object.git"
 vim_plugin_task "javascript",       "git://github.com/pangloss/vim-javascript.git"
+vim_plugin_task "jslint",           "git://github.com/hallettj/jslint.vim.git"
+#vim_plugin_task "jshint",           "git://github.com/wookiehangover/jshint.vim.git"
 vim_plugin_task "nerdtree",         "git://github.com/wycats/nerdtree.git"
 vim_plugin_task "nerdcommenter",    "git://github.com/ddollar/nerdcommenter.git"
 vim_plugin_task "surround",         "git://github.com/tpope/vim-surround.git"
-vim_plugin_task "taglist",          "git://github.com/vim-scripts/taglist.vim.git"
+#TODO not working in Windows
+#vim_plugin_task "taglist",          "git://github.com/vim-scripts/taglist.vim.git"
 vim_plugin_task "vividchalk",       "git://github.com/tpope/vim-vividchalk.git"
 vim_plugin_task "solarized",        "git://github.com/altercation/vim-colors-solarized.git"
 vim_plugin_task "supertab",         "git://github.com/ervandew/supertab.git"
@@ -155,24 +158,26 @@ vim_plugin_task "vim-coffee-script","git://github.com/kchmck/vim-coffee-script.g
 vim_plugin_task "syntastic",        "git://github.com/scrooloose/syntastic.git"
 vim_plugin_task "puppet",           "git://github.com/ajf/puppet-vim.git"
 vim_plugin_task "scala",            "git://github.com/bdd/vim-scala.git"
-vim_plugin_task "gist-vim",         "git://github.com/mattn/gist-vim.git"
+#TODO not working in Windows
+#vim_plugin_task "gist-vim",         "git://github.com/mattn/gist-vim.git"
 
 #vim_plugin_task "hammer",           "git://github.com/robgleeson/hammer.vim.git" do
 #  sh "gem install github-markup redcarpet"
 #end
 
-vim_plugin_task "command_t",        "http://s3.wincent.com/command-t/releases/command-t-1.2.1.vba" do
-  Dir.chdir "ruby/command-t" do
-    if File.exists?("/usr/bin/ruby1.8") # prefer 1.8 on *.deb systems
-      sh "/usr/bin/ruby1.8 extconf.rb"
-    elsif File.exists?("/usr/bin/ruby") # prefer system rubies
-      sh "/usr/bin/ruby extconf.rb"
-    elsif `rvm > /dev/null 2>&1` && $?.exitstatus == 0
-      sh "rvm system ruby extconf.rb"
-    end
-    sh "make clean && make"
-  end
-end
+#TODO not working in Windows
+#vim_plugin_task "command_t",        "http://s3.wincent.com/command-t/releases/command-t-1.2.1.vba" do
+  #Dir.chdir "ruby/command-t" do
+    #if File.exists?("/usr/bin/ruby1.8") # prefer 1.8 on *.deb systems
+      #sh "/usr/bin/ruby1.8 extconf.rb"
+    #elsif File.exists?("/usr/bin/ruby") # prefer system rubies
+      #sh "/usr/bin/ruby extconf.rb"
+    #elsif `rvm > /dev/null 2>&1` && $?.exitstatus == 0
+      #sh "rvm system ruby extconf.rb"
+    #end
+    #sh "make clean && make"
+  #end
+#end
 
 vim_plugin_task "janus_themes" do
   # custom version of railscasts theme
@@ -227,18 +232,20 @@ end
 
 desc "Update the documentation"
 task :update_docs do
-  puts "Updating VIM Documentation..."
-  system "vim -e -s <<-EOF\n:helptags ~/.vim/doc\n:quit\nEOF"
+  #TODO not working in windows
+  #puts "Updating VIM Documentation..."
+  #system "vim -e -s <<-EOF\n:helptags ~/.vim/doc\n:quit\nEOF"
 end
 
 desc "link vimrc to ~/.vimrc"
 task :link_vimrc do
-  %w[ vimrc gvimrc ].each do |file|
-    dest = File.expand_path("~/.#{file}")
-    unless File.exist?(dest)
-      ln_s(File.expand_path("../#{file}", __FILE__), dest)
-    end
-  end
+  #TODO not working in windows
+  #%w[ vimrc gvimrc ].each do |file|
+    #dest = File.expand_path("~/.#{file}")
+    #unless File.exist?(dest)
+      #ln_s(File.expand_path("../#{file}", __FILE__), dest)
+    #end
+  #end
 end
 
 task :clean do

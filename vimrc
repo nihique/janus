@@ -1,7 +1,24 @@
+" Include user's local vim config that runs before
+if has("win32") || has("win64")
+  if filereadable(expand("$HOME/_vimrc.local.before"))
+    source $HOME/_vimrc.local.before
+  endif
+else
+  if filereadable(expand("~/.vimrc.local.before"))
+    source ~/.vimrc.local.before
+  endif
+endif
+
+" Set compatibility to VIM (not VI)
 set nocompatible
 
+" Show line numbers
 set number
+
+" Show ruler
 set ruler
+
+" Turn on syntax highliter
 syntax on
 
 " Set encoding
@@ -128,11 +145,16 @@ set modelines=10
 color desert
 
 " Directories for swp files
-set backupdir=~/.vim/backup
-set directory=~/.vim/backup
+if has("win32") || has("win64")
+  set backupdir=$HOME/vimfiles/backup
+  set directory=$HOME/vimfiles/backup
+else
+  set backupdir=~/.vim/backup
+  set directory=~/.vim/backup
+endif
 
 " Turn off jslint errors by default
-let g:JSLintHighlightErrorLine = 0
+let g:JSLintHighlightErrorLine = 1
 
 " MacVIM shift+arrow-keys behavior (required in .vimrc)
 let macvim_hig_shift_movement = 1
@@ -143,7 +165,13 @@ runtime! macros/matchit.vim
 " Show (partial) command in the status line
 set showcmd
 
-" Include user's local vim config
-if filereadable(expand("~/.vimrc.local"))
-  source ~/.vimrc.local
+" Include user's local vim config that runs after
+if has("win32") || has("win64")
+  if filereadable(expand("$HOME/_vimrc.local.after"))
+    source $HOME/_vimrc.local.after
+  endif
+else
+  if filereadable(expand("~/.vimrc.local.after"))
+    source ~/.vimrc.local.after
+  endif
 endif
