@@ -1,1 +1,44 @@
+"-----------------------------------------------------------------------------
+" Colorscheme
+"-----------------------------------------------------------------------------
 
+" Solarized theme
+set background=dark
+colorscheme solarized
+
+" IR Black theme (default in Janus)
+" colorscheme ir_black
+
+" Molokai theme (my custom)
+"colorscheme molokai-martin
+"if has("mac")
+    "colorscheme molokai-martin-mac
+"endif
+
+
+
+"-----------------------------------------------------------------------------
+" Fonts, encoding and file formats
+"-----------------------------------------------------------------------------
+
+set linespace=0
+
+if has("win32") || has("win64")
+    set guifont=Envy\ Code\ R:h10
+    "set guifont=Monaco:h10
+elseif has("mac")
+    set guifont=Monaco:h13
+    set transparency=20
+else
+    set guifont=Envy\ Code\ R\ 10
+endif
+
+if !exists("g:vimrcloaded")
+    winpos 714 0
+    if ! &diff
+        winsize 150 59
+    else
+        winsize 227 90
+    endif
+    let g:vimrcloaded = 1
+endif

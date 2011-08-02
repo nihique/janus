@@ -23,39 +23,18 @@ set softtabstop=4
 
 
 "-----------------------------------------------------------------------------
-" Colors, fonts, encoding and file formats
+" Backupcopy to allow symlinks in windows
 "-----------------------------------------------------------------------------
 
-" Setting specific for molokai theme
-let g:molokai_original=0
-
-if has("gui_running")
-
-    colorscheme molokai-martin
-
-    if has("win32") || has("win64")
-        set guifont=Envy\ Code\ R:h10
-        "set guifont=Monaco:h10
-        set linespace=0
-    elseif has("mac")
-        colorscheme molokai-martin-mac
-        set guifont=Monaco:h13
-        set transparency=20
-    else
-        set guifont=Envy\ Code\ R\ 11
-    endif
-
-    if !exists("g:vimrcloaded")
-        winpos 714 0
-        if ! &diff
-            winsize 150 59
-        else
-            winsize 227 90
-        endif
-        let g:vimrcloaded = 1
-    endif
-
+if has("win32") || has("win64")
+    set backupcopy=yes
 endif
+
+
+
+"-----------------------------------------------------------------------------
+" Fileformats
+"-----------------------------------------------------------------------------
 
 set fileformats=unix,dos,mac
 
@@ -71,13 +50,27 @@ nmap <leader>w :w!<CR>
 " Fast editing of the .vimrc files
 nmap <leader>ev :e $MYVIMRC<CR>
 nmap <leader>sv :so $MYVIMRC<CR>
-nmap <leader>evl :e $MYVIMRC.local<CR>
-nmap <leader>svl :so $MYVIMRC.local<CR>
-nmap <leader>evb :e $MYVIMRC.local.before<CR>
-nmap <leader>svb :so $MYVIMRC.local.before<CR>
+
+nmap <leader>evla :e $MYVIMRC.local.after<CR>
+nmap <leader>svla :so $MYVIMRC.local.after<CR>
+
+nmap <leader>evlb :e $MYVIMRC.local.before<CR>
+nmap <leader>svlb :so $MYVIMRC.local.before<CR>
+
+nmap <leader>eg :e $MYGVIMRC<CR>
+nmap <leader>sg :so $MYGVIMRC<CR>
+
+nmap <leader>egla :e $MYGVIMRC.local.after<CR>
+nmap <leader>sgla :so $MYGVIMRC.local.after<CR>
+
+nmap <leader>eglb :e $MYGVIMRC.local.before<CR>
+nmap <leader>sglb :so $MYGVIMRC.local.before<CR>
 
 " Switch to next buffer
-noremap <silent> <leader>bb :b#<CR>
+noremap <silent> <leader>bb :bn<CR>
+
+" Switch between two buffers
+noremap <silent> <leader>bs :b#<CR>
 
 " Close current buffer but leave window open
 nnoremap <silent> <Leader>bd :Bclose<CR>

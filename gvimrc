@@ -1,3 +1,14 @@
+" Include user's local gvim config that runs before
+if has("win32") || has("win64")
+  if filereadable(expand("$HOME/_gvimrc.local.before"))
+    source $HOME/_gvimrc.local.before
+  endif
+else
+  if filereadable(expand("~/.gvimrc.local.before"))
+    source ~/.gvimrc.local.before
+  endif
+endif
+
 if has("gui_macvim")
   " Fullscreen takes up entire screen
   set fuoptions=maxhorz,maxvert
@@ -224,7 +235,13 @@ call s:DefineCommand("rm", "Remove")
 call s:DefineCommand("e", "Edit")
 call s:DefineCommand("mkdir", "Mkdir")
 
-" Include user's local vim config
-if filereadable(expand("~/.gvimrc.local"))
-  source ~/.gvimrc.local
+" Include user's local vim config that runs after
+if has("win32") || has("win64")
+  if filereadable(expand("$HOME/_gvimrc.local.after"))
+    source $HOME/_gvimrc.local.after
+  endif
+else
+  if filereadable(expand("~/.gvimrc.local.after"))
+    source ~/.gvimrc.local.after
+  endif
 endif
