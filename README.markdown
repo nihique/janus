@@ -1,5 +1,16 @@
 # Janus: Carlhuda's vim Distribution
 
+This is my fork for Janus, see below...
+
+## Changes
+
+* This fork is windows compatible
+* Added JSLint plugin
+
+---
+
+# Janus: Carlhuda's vim Distribution
+
 This is a basic distribution of vim plugins and tools intended to be run
 on top of the latest MacVIM snapshot.
 
